@@ -22,7 +22,7 @@
 #define COLOR_BLUE "\x1B[31m"
 #define COLOR_RESET "\x1B[0m"
 
-#define DEBUG_off
+#define DEBUG
 
 
 char piece_to_char(char p) {
@@ -179,13 +179,37 @@ int check_rook(char *board, int src, int dest) {
         return 1;
     }
 
-    for (int i = 0; i <= (max(dest, src)+8)%8;i++) {
-        if (src == dest+i || src == dest-i) {
+    for (int i = src-((src+8)%8)-1; i < (src-((src+8)%8)-1)+(((src+8)%8)+8-1); i++) {
+        if (i == dest) {
             return 1;
         }
     }
 
     return 0;
+}
+
+int check_bishop(char *board, int src, int dest) {
+
+    if (dest > src) {
+        dest, src = src, dest;
+    }
+
+    if ((src - dest) % 7 == 0 || (src - dest) % 9 == 0) {
+        return 1;
+    }
+
+    return 0;
+}
+
+int check_king(char *board, int src, int dest) {
+    return src + 1 == dest
+        || src - 1 == dest
+        || src + 8 == dest
+        || src + 7 == dest
+        || src + 9 == dest
+        || src - 8 == dest
+        || src - 7 == dest
+        || src - 9 == dest;
 }
 
 int can_move(char* board, int src, int dest, char piece, char turn) {
@@ -200,8 +224,15 @@ int can_move(char* board, int src, int dest, char piece, char turn) {
         return check_rook(board, src, dest);
     case(KNIGHT):
         return check_knight(board, src, dest);
+    case(BISHOP):
+        return check_bishop(board, src, dest);
+    case(QUEEN):
+        return check_bishop(board, src, dest) || check_rook(board, src, dest);
+    case(KING):
+        return check_king(board, src, dest);
     default:
-        return 1;
+        // fail?
+        return 0;
     }
 
 }
@@ -254,7 +285,7 @@ int move(char* board, char* dest, int turn) {
 
     // check if this turn is allowed to move this color piece
     char piece = board[pos];
-    if ((piece << 7 & turn << 7) != turn << 7) {
+    if ((piece | turn) != piece) {
         printf("not your turn to move: %c\n", piece_to_char(piece));
         return 0;
     }
@@ -266,7 +297,7 @@ int move(char* board, char* dest, int turn) {
         return 0;
     }
     // check if destination is not a of the same color
-    if (board[topos] != 0 && ((board[topos] << 7 & turn << 7) == turn << 7)) {
+    if (board[topos] != 0 && ((board[topos] | turn) != board[topos])) {
         printf("cant move there: %c\n", piece_to_char(piece));
         return 0;
     }
@@ -310,9 +341,26 @@ int main() {
         "1014 ok   white", // test rook
         "1464 ok   white", // test rook
         "6453 fail white", // test rook
-        "6454 ok white", // test rook
-        "5455 ok white", // test rook
-        "5515 ok white", // test rook
+        "6454 ok   white", // test rook
+        "5455 ok   white", // test rook
+        "5515 ok   white", // test rook
+        "1516 ok   white", // test rook
+        "1607 fail white", // test rook
+        "1617 ok   white", // test rook
+        "1707 ok   white", // test rook
+        "2022 fail white", // test bishop
+        "2042 ok   white", // test bishop
+        "4252 fail white", // test bishop
+        "4250 fail white", // test bishop
+        "4252 fail white", // test bishop
+        "4253 ok   white", // test bishop
+        "5364 ok   white", // test bishop
+        "6442 ok   white", // test bishop
+        "3034 ok   white", // test queen
+        "3424 ok   white", // test queen
+        "2433 ok   white", // test queen
+        "4030 ok   white", // test king
+        "3010 fail white", // test king
         ""
     };
     int i  = 0;
