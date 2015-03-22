@@ -46,12 +46,19 @@ int check_rook(char *board, int direction, int src, int dest) {
         return 0;
     }
 
+    // found the right destination
+    if (pos == dest) {
+        return 1;
+    }
+
+    // not an empty position
     if (board[pos] != 0) {
         return 0;
-    } else if (pos == dest) {
-        return 1;
-    } else if (pos != 0 && (pos%8 == 0 || pos%7 == 0)) {
-        return 1;
+    }
+
+    // going off the edge of the chessboard
+    if (pos != 0 && (pos%8 == 0 || pos%7 == 0)) {
+        return 0;
     }
 
     return check_rook(board, direction+direction, src, dest);
@@ -73,10 +80,10 @@ int check_bishop(char *board, int src, int dest) {
 int check_king(char *board, int src, int dest) {
 
     return src + 1 == dest
-        || src - 1 == dest
         || src + 8 == dest
         || src + 7 == dest
         || src + 9 == dest
+        || src - 1 == dest
         || src - 8 == dest
         || src - 7 == dest
         || src - 9 == dest;

@@ -62,8 +62,8 @@ int move(char* board, char* dest, int turn) {
         return 0;
     }
     // check if destination is not a of the same color
-    if (board[topos] != 0 && ((board[topos] | turn) != board[topos])) {
-        printf("cant move there: %c\n", piece_to_char(piece));
+    if (board[topos] != 0 && ((board[topos] | turn) == board[topos])) {
+        printf("piece of your color is there: %c\n", piece_to_char(piece));
         return 0;
     }
 
@@ -103,6 +103,11 @@ int main() {
         "1022 ok   white", // test knight
         "1705 ok   black", // test knight
         "0010 ok   white", // test rook
+        "1014 fail white", // test rook
+        "1112 ok   white", // test pawn
+        "1213 ok   white", // test pawn
+        "1314 ok   white", // test pawn
+        "1415 ok   white", // test pawn
         "1014 ok   white", // test rook
         "1464 ok   white", // test rook
         "6453 fail white", // test rook
