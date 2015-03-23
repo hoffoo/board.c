@@ -32,6 +32,6 @@ char piece_to_char(char p);
 int check_pawn(char* board, int src, int dest, char turn);
 int check_knight(char *board, int src, int dest);
 int check_rook(char *board, int start, int src, int dest);
-int check_bishop(char *board, int src, int dest);
+int check_bishop(char *board, int direction, int src, int dest);
 int check_king(char *board, int src, int dest);
 int can_move(char* board, int src, int dest, char piece, char turn);

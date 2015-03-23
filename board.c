@@ -109,21 +109,13 @@ int main() {
         "1314 ok   white", // test pawn
         "1415 ok   white", // test pawn
         "1014 ok   white", // test rook
-        "1464 ok   white", // test rook
+        "1474 ok   white", // test rook
         "6453 fail white", // test rook
-        "6454 ok   white", // test rook
-        "5455 ok   white", // test rook
-        "5515 ok   white", // test rook
-        "1516 ok   white", // test rook
-        "1607 fail white", // test rook
-        "1617 ok   white", // test rook
-        "1707 ok   white", // test rook
         "2022 fail white", // test bishop
+        "2042 fail white", // test bishop
+        "3132 ok   white", // test move pawn
         "2042 ok   white", // test bishop
-        "4252 fail white", // test bishop
-        "4250 fail white", // test bishop
-        "4252 fail white", // test bishop
-        "4253 ok   white", // test bishop
+        /*
         "5364 ok   white", // test bishop
         "6442 ok   white", // test bishop
         "3034 ok   white", // test queen
@@ -131,6 +123,7 @@ int main() {
         "2433 ok   white", // test queen
         "4030 ok   white", // test king
         "3010 fail white", // test king
+        */
         ""
     };
     int i  = 0;

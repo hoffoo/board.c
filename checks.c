@@ -29,10 +29,6 @@ int check_knight(char *board, int src, int dest) {
 }
 
 int check_rook(char *board, int direction, int src, int dest) {
-
-    if (src > 64 || src < 0) {
-        return 0;
-    }
     
     if (!direction) {
         return check_rook(board, 1, src, dest)
@@ -41,8 +37,14 @@ int check_rook(char *board, int direction, int src, int dest) {
             || check_rook(board, -8, src, dest);
     }
 
+
     int pos = src + direction;
-    if (pos < 0) {
+    if (pos < 0 || pos > 64) {
+        return 0;
+    }
+
+    // going off the edge of the chessboard
+    if (pos-1 != 0 && (pos-1%8 == 0 || pos-1%7 == 0)) {
         return 0;
     }
 
@@ -56,25 +58,43 @@ int check_rook(char *board, int direction, int src, int dest) {
         return 0;
     }
 
-    // going off the edge of the chessboard
-    if (pos != 0 && (pos%8 == 0 || pos%7 == 0)) {
+    src = pos;
+
+    return check_rook(board, direction, src, dest);
+}
+
+int check_bishop(char *board, int direction, int src, int dest) {
+
+    if (!direction) {
+        return check_bishop(board,  7, src, dest)
+            || check_bishop(board, -7, src, dest)
+            || check_bishop(board,  9, src, dest)
+            || check_bishop(board, -9, src, dest);
+    }
+
+    int pos = src + direction;
+    if (pos < 0 || pos > 64) {
         return 0;
     }
 
-    return check_rook(board, direction+direction, src, dest);
-}
-
-int check_bishop(char *board, int src, int dest) {
-
-    if (dest > src) {
-        dest, src = src, dest;
+    // going off the edge of the chessboard
+    if (pos-1 != 0 && (pos-1%8 == 0 || pos-1%7 == 0)) {
+        return 0;
     }
 
-    if ((src - dest) % 7 == 0 || (src - dest) % 9 == 0) {
+    // found the right destination
+    if (pos == dest) {
         return 1;
     }
 
-    return 0;
+    // not an empty position
+    if (board[pos] != 0) {
+        return 0;
+    }
+
+    src = pos;
+
+    return check_bishop(board, direction, src, dest);
 }
 
 int check_king(char *board, int src, int dest) {
@@ -99,9 +119,9 @@ int can_move(char* board, int src, int dest, char piece, char turn) {
     case(KNIGHT):
         return check_knight(board, src, dest);
     case(BISHOP):
-        return check_bishop(board, src, dest);
+        return check_bishop(board, 0, src, dest);
     case(QUEEN):
-        return check_bishop(board, src, dest) || check_rook(board, 0, src, dest);
+        return check_bishop(board, 0, src, dest) || check_rook(board, 0, src, dest);
     case(KING):
         return check_king(board, src, dest);
     default:
